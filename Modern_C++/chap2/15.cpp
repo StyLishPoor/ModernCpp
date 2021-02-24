@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <array>
 
 class ipv4
@@ -8,7 +9,7 @@ public:
   constexpr ipv4() : ipv4(0,0,0,0) {}
   constexpr ipv4(unsigned char const a, unsigned char const b,
                  unsigned char const c, unsigned char const d) :
-                 data{(a,b,c,d)} {}
+                 data{{a,b,c,d}} {}
   explicit constexpr ipv4(unsigned long a) : ipv4(static_cast<unsigned char>((a >> 24) & 0xFF),
                                                   static_cast<unsigned char>((a >> 16) & 0xFF),
                                                   static_cast<unsigned char>((a >> 8) & 0xFF),
@@ -23,16 +24,16 @@ public:
   std::string to_string() const
   {
     std::stringstream sstr;
-    sstd << *this;
+    sstr << *this;
     return sstr.str();
   }
 
   constexpr unsigned long to_long() const noexcept
   {
-    return (static_cast<uint8_t>(data[0] << 24) | 
-            static_cast<uint8_t>(data[1] << 16) |
-            static_cast<uint8_t>(data[2] <<  8) |
-            static_cast<uint8_t>(data[3]);
+    return (static_cast<uint8_t>(data[0]) << 24) | 
+           (static_cast<uint8_t>(data[1]) << 16) |
+           (static_cast<uint8_t>(data[2]) <<  8) |
+           static_cast<uint8_t>(data[3]);
   }
 
   friend std::ostream& operator<<(std::ostream& os, const ipv4& a)
@@ -57,3 +58,17 @@ public:
     return is;
   }
 };
+
+int main() 
+{
+  ipv4 address(168, 192, 0, 1);
+  std::cout << address << std::endl;
+
+  ipv4 ip;
+  std::cout << ip << std::endl;
+  std::cin >> ip;
+  if (!std::cin.fail()) {
+    std::cout << ip << std::endl;
+  }
+  return 0;
+}
